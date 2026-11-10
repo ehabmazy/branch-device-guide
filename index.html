@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>دليل أجهزة الفرع</title>
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--tx:#14202b;--mu:#5b6b7a;--pr:#0b6bcb;--prt:#fff;--bd:#dde3ea;--wr:#fff4e0;--wrt:#7a4a00;--dg:#fde8e8;--dgt:#8a1c1c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#10161c;--card:#1a232c;--tx:#e8eef3;--mu:#9aabba;--pr:#4a9df0;--prt:#07121d;--bd:#2c3945;--wr:#3a2d12;--wrt:#f2c777;--dg:#3b1a1a;--dgt:#f5a3a3}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Tahoma,"Segoe UI",Arial,sans-serif;line-height:1.7}
+main{max-width:640px;margin:auto;padding:14px}
+h1{font-size:1.3rem;margin:4px 0}h2{font-size:1.05rem;margin:0 0 8px}
+.sub{color:var(--mu);font-size:.85rem;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px}
+.warn{background:var(--wr);color:var(--wrt);border-color:transparent}
+.danger{background:var(--dg);color:var(--dgt);border-color:transparent}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dev{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px 8px;font-size:1rem;color:var(--tx);text-align:center}
+.dev span{display:block;font-size:2rem}
+ol,ul{margin:0;padding-inline-start:22px}li{margin-bottom:6px}
+details{border-top:1px solid var(--bd);padding:8px 0}details:first-of-type{border-top:0}
+summary{cursor:pointer;font-weight:bold}
+button{font:inherit;cursor:pointer}
+.chip{background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:20px;padding:6px 12px;margin:3px}
+.send{background:var(--pr);color:var(--prt);border:0;border-radius:10px;padding:10px 16px}
+.back{background:none;border:0;color:var(--pr);padding:4px 0;font-size:1rem}
+#log{max-height:340px;overflow-y:auto;margin-bottom:8px}
+.m{padding:8px 12px;border-radius:12px;margin:6px 0;max-width:92%;white-space:pre-wrap}
+.u{background:var(--pr);color:var(--prt);margin-inline-start:auto}
+.b{background:var(--bg);border:1px solid var(--bd)}
+.row{display:flex;gap:6px}
+input,select,textarea{font:inherit;width:100%;padding:10px;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);margin-bottom:8px}
+svg.ill{display:block;width:100%;max-width:260px;margin:8px auto 2px;background:var(--card);border-radius:10px;border:1px solid var(--bd)}
+img.ph{width:100%;border-radius:10px;margin:8px 0}
+small{color:var(--mu)}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+/* ===== إعدادات ===== */
+var BRANCH="اسم الفرع هنا";           /* غيّر اسم الفرع لكل بنك */
+var CONTACTS=[                        /* أرقام واتساب الدعم (بصيغة دولية) */
+ {n:"م. إبراهيم مازي",wa:"201004998804"},
+ {n:"إيهاب",wa:"201004277320"}
+];
+
+/* ===== رسومات توضيحية (SVG). يمكن استبدالها بصور حقيقية: ضع اسم الصورة في الحقل photo ===== */
+var T='font-family="Tahoma,Arial" text-anchor="middle" fill="currentColor"';
+var ILL={
+remote:'<svg class="ill" viewBox="0 0 260 150"><rect x="95" y="8" width="70" height="134" rx="14" fill="none" stroke="currentColor" stroke-width="2"/><rect x="108" y="20" width="44" height="22" rx="4" fill="none" stroke="currentColor"/><text x="130" y="36" '+T+' font-size="12">24°</text><circle cx="130" cy="64" r="11" fill="#d9363e"/><text x="130" y="68" '+T+' font-size="9" fill="#fff">ON/OFF</text><path d="M118 90h24l-12-14zM118 106h24l-12 14z" fill="#0b6bcb"/><text x="130" y="134" '+T+' font-size="10">❄ MODE</text><text x="200" y="68" '+T+' font-size="11">① شغّل</text><text x="200" y="96" '+T+' font-size="11">② الحرارة</text><text x="55" y="134" '+T+' font-size="11">③ بارد</text></svg>',
+drip:'<svg class="ill" viewBox="0 0 260 120"><rect x="30" y="14" width="200" height="40" rx="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M130 62c-8 12-8 20 0 20s8-8 0-20z" fill="#0b6bcb"/><path d="M95 98h70l-8 14h-54z" fill="none" stroke="currentColor" stroke-width="2"/><text x="130" y="38" '+T+' font-size="12">الجهاز</text><text x="205" y="104" '+T+' font-size="11">ضع وعاءً</text></svg>',
+wait:'<svg class="ill" viewBox="0 0 260 110"><circle cx="130" cy="55" r="38" fill="none" stroke="currentColor" stroke-width="3"/><path d="M130 30v26l18 10" stroke="currentColor" stroke-width="3" fill="none"/><text x="130" y="105" '+T+' font-size="12">انتظر 3 دقائق</text></svg>',
+mixer:'<svg class="ill" viewBox="0 0 260 140"><rect x="15" y="10" width="230" height="118" rx="10" fill="none" stroke="currentColor" stroke-width="2"/><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="55" cy="45" r="15"/><circle cx="105" cy="45" r="15"/><circle cx="155" cy="45" r="15"/></g><path d="M55 33v10M105 33v12M155 33v8" stroke="#0b6bcb" stroke-width="3"/><g stroke="currentColor" stroke-width="2"><path d="M55 80v35M105 80v35M155 80v35M205 80v35"/></g><g fill="#0b6bcb"><rect x="45" y="92" width="20" height="9" rx="2"/><rect x="95" y="100" width="20" height="9" rx="2"/><rect x="145" y="88" width="20" height="9" rx="2"/><rect x="195" y="96" width="20" height="9" rx="2"/></g><text x="210" y="48" '+T+' font-size="11">MASTER ▼</text><text x="130" y="124" '+T+' font-size="10">لا تغيّر الضبط المعتمد</text></svg>',
+mic:'<svg class="ill" viewBox="0 0 260 120"><rect x="105" y="10" width="26" height="46" rx="13" fill="none" stroke="currentColor" stroke-width="2"/><path d="M92 46a26 26 0 0 0 52 0M118 72v18M100 90h36" fill="none" stroke="currentColor" stroke-width="2"/><path d="M172 30l20 10-20 10zM178 55l22 6" fill="none" stroke="#d9363e" stroke-width="2"/><text x="215" y="30" '+T+' font-size="11">صفير؟</text><text x="130" y="112" '+T+' font-size="11">ابعد الميكروفون عن السماعة</text></svg>',
+panel:'<svg class="ill" viewBox="0 0 260 130"><rect x="30" y="10" width="200" height="110" rx="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="70" cy="40" r="9" fill="#2e9e4f"/><circle cx="110" cy="40" r="9" fill="#f0b429"/><circle cx="150" cy="40" r="9" fill="#d9363e"/><text x="70" y="68" '+T+' font-size="10">طبيعي</text><text x="110" y="68" '+T+' font-size="10">عطل</text><text x="150" y="68" '+T+' font-size="10">إنذار</text><rect x="90" y="84" width="80" height="22" rx="5" fill="none" stroke="currentColor"/><text x="130" y="99" '+T+' font-size="10">لوحة الإنذار</text></svg>'
+};
+
+/* ===== بيانات الأجهزة: أضف جهازاً جديداً بنسخ كتلة وتعديلها ===== */
+var DEV={
+ac:{n:"التكييف",i:"❄️",ill:"remote",
+ steps:["وجّه الريموت للجهاز واضغط ON/OFF.","اختر وضع «بارد» ❄️.","اضبط الحرارة على 24°.","اترك المروحة على Auto."],
+ donts:["لا تضبط أقل من 22°.","انتظر 3 دقائق بين الإطفاء والتشغيل.","لا تفصل القاطع لإطفاء الجهاز.","لا تفتح الغطاء ولا تسكب ماء."],
+ chips:["كيف أشغل الجهاز؟","كيف أضبط الحرارة؟","لا يبرّد","ماء يقطر","الريموت لا يعمل"],
+ kb:[
+ {k:["حريق","دخان","شرار","رائحه","ريحه","احتراق"],d:1,a:"🔥 أطفئ الجهاز بالريموت وابتعد عنه، وإذا رأيت دخاناً اضغط إنذار الحريق وأخلِ المكان. ثم أرسل بلاغاً عاجلاً."},
+ {k:["شغل","تشغيل","اشغل","افتح"],a:"اضغط ON/OFF في الريموت ووجّهه للجهاز، ثم اختر «بارد» واضبط 24°.",ill:"remote"},
+ {k:["اطفاء","اطفي","وقف","اقفل"],a:"اضغط ON/OFF في الريموت. لا تفصل القاطع، وانتظر 3 دقائق قبل أي تشغيل جديد.",ill:"wait"},
+ {k:["درجه","حراره","ضبط","اضبط","ابرد","ازيد","اقلل"],a:"الحرارة الموصى بها 24°، استخدم الأسهم ▲▼. لا تضبط أقل من 22°.",ill:"remote"},
+ {k:["لا يبرد","مش بيبرد","ما يبرد","لايبرد","ساخن","سخن","حار"],a:"1) تأكد أن الوضع «بارد».\n2) الحرارة المضبوطة أقل من حرارة المكان.\n3) أغلق الأبواب والنوافذ.\nإذا استمر بعد 15 دقيقة أرسل بلاغاً.",ill:"remote"},
+ {k:["ريموت","بطاري","لا يستجيب","جهاز التحكم"],a:"غيّر البطاريتين ووجّه الريموت للجهاز بدون عائق. إن لم يستجب أرسل بلاغاً."},
+ {k:["ماء","يقطر","تسريب","مياه","تنقيط"],a:"أطفئ الجهاز بالريموت وضع وعاءً تحته ثم أرسل بلاغاً. لا تفك أي جزء.",ill:"drip"},
+ {k:["كود","خطا","error","رمز","يومض","وميض"],a:"صوّر الشاشة أو الأضواء الوامضة وأرسلها مع البلاغ."},
+ {k:["انتظر","دقايق","دقائق","ريستارت","اعاده"],a:"أطفئ الجهاز، انتظر 3 دقائق كاملة ثم شغّله. هذا يحمي الضاغط.",ill:"wait"}
+ ]},
+snd:{n:"نظام الصوت",i:"🔊",ill:"mixer",
+ steps:["شغّل مصدر الصوت (الميكروفون/الحاسب) أولاً.","ثم شغّل مكبّر الصوت (Amplifier) أخيراً.","ارفع مستوى MASTER تدريجياً.","عند الإغلاق: اخفض الصوت ثم أطفئ المكبّر أولاً."],
+ donts:["لا تغيّر أزرار الضبط (EQ) المعتمدة من المهندس.","لا ترفع الصوت إلى الحد الأقصى فجأة.","لا توصّل أو تفصل الكابلات والجهاز يعمل."],
+ chips:["لا يوجد صوت","صفير عالٍ","الصوت منخفض","كيف أشغل النظام؟"],
+ kb:[
+ {k:["دخان","رائحه","ريحه","شرار","سخونه","حريق"],d:1,a:"أطفئ المكبّر فوراً وافصله عن الكهرباء إن أمكن بأمان، وإذا ظهر دخان اضغط إنذار الحريق. ثم أرسل بلاغاً عاجلاً."},
+ {k:["شغل","تشغيل","اشغل","كيف"],a:"1) شغّل المصدر.\n2) شغّل المكبّر أخيراً.\n3) ارفع MASTER تدريجياً.",ill:"mixer"},
+ {k:["لا يوجد صوت","مفيش صوت","ما في صوت","بدون صوت","صامت","كتم","mute"],a:"1) تأكد أن المكبّر يعمل (لمبة مضيئة).\n2) تأكد أن زر MUTE غير مضغوط.\n3) ارفع MASTER قليلاً.\n4) تأكد أن الميكروفون مفتوح.\nإن لم يعمل أرسل بلاغاً.",ill:"mixer"},
+ {k:["صفير","تغذيه","زن","صوت عالي حاد","ايكو"],a:"الصفير يحدث عندما يقترب الميكروفون من السماعة. ابعده عنها واخفض مستواه قليلاً.",ill:"mic"},
+ {k:["منخفض","واطي","ضعيف","ارفع","اعلي"],a:"ارفع MASTER تدريجياً، وقرّب الميكروفون من الفم. لا تغيّر أزرار EQ.",ill:"mixer"},
+ {k:["ميكروفون","مايك","ميك"],a:"تأكد أن الميكروفون مفتوح وبطاريته جيدة وأن مستواه مرفوع قليلاً.",ill:"mic"}
+ ]},
+fire:{n:"إنذار الحريق",i:"🚨",ill:"panel",danger:1,
+ steps:["الضوء الأخضر = النظام طبيعي.","الأصفر = عطل في النظام: بلّغ المسؤول.","الأحمر وصفارة = إنذار: اتبع خطة الإخلاء."],
+ donts:["لا تضغط RESET أو SILENCE إلا إذا كنت مخوّلاً.","لا تفصل كهرباء أو بطارية اللوحة.","لا تغطِّ الكواشف ولا تعلّق عليها شيئاً."],
+ chips:["لماذا تصفّر اللوحة؟","ضوء أصفر","ماذا أفعل عند الحريق؟","إنذار كاذب"],
+ kb:[
+ {k:["حريق","دخان","نار","لهب"],d:1,a:"🔥 اضغط أقرب زر إنذار يدوي، أخلِ المكان عبر مخارج الطوارئ، لا تستخدم المصعد، واتصل بالطوارئ. لا تحاول إطفاء حريق كبير."},
+ {k:["اصفر","صفير متقطع","عطل","trouble","fault"],a:"الضوء الأصفر أو الصفير المتقطع يعني وجود عطل في النظام وليس حريقاً. بلّغ المسؤول وأرسل بلاغاً مع صورة للوحة. لا تضغط RESET.",ill:"panel"},
+ {k:["تصفر","صفاره","صفارة","تنبيه","انذار","احمر"],a:"افحص اللوحة: إذا كان الضوء أحمر فهذا إنذار حقيقي ويجب الإخلاء. إذا كان أصفر فهو عطل: بلّغ المسؤول.",ill:"panel"},
+ {k:["كاذب","خطا","بدون سبب","من نفسه"],a:"تأكد أولاً أنه لا يوجد دخان أو رائحة. إذا لم يوجد، بلّغ المسؤول وأرسل بلاغاً بصورة اللوحة. لا تفصل النظام.",ill:"panel"},
+ {k:["reset","ريست","اسكت","سكت","اوقف","وقف"],a:"لا تضغط RESET أو SILENCE إلا بتعليمات المسؤول، فالإسكات قبل معرفة السبب قد يخفي خطراً حقيقياً."}
+ ]}
+};
+
+/* ===== المنطق ===== */
+var app=document.getElementById("app");
+function norm(s){return s.toLowerCase().replace(/[\u064B-\u0652]/g,"").replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي")}
+function esc(s){return s.replace(/[&<>]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;"}[c]})}
+function photo(id){return ""} /* لإضافة صورة حقيقية: ضعها بجانب الملف باسم images/ac.jpg ثم عدّل السطر التالي */
+function home(){
+ var h='<h1>أهلاً بك 👋</h1><div class="sub">'+BRANCH+' · اختر الجهاز الذي تريد استخدامه</div><div class="grid">';
+ for(var k in DEV)h+='<button class="dev" onclick="location.hash=\''+k+'\'"><span>'+DEV[k].i+'</span>'+DEV[k].n+'</button>';
+ h+='</div><div class="card danger" style="margin-top:12px"><b>🔥 طوارئ:</b> عند رؤية دخان أو رائحة حريق: اضغط إنذار الحريق وأخلِ المكان واتصل بالطوارئ.</div>';
+ app.innerHTML=h}
+function device(id){
+ var d=DEV[id];
+ var h='<button class="back" onclick="location.hash=\'\'">→ كل الأجهزة</button><h1>'+d.i+' '+d.n+'</h1><div class="sub">'+BRANCH+'</div>';
+ if(d.danger)h+='<div class="card danger"><b>تنبيه:</b> هذا جهاز سلامة. لا تغيّر أي إعداد، وللتشغيل والعطل اتبع التعليمات فقط.</div>';
+ h+='<div class="card"><h2>الخطوات</h2>'+ILL[d.ill]+'<ol>'+d.steps.map(function(s){return'<li>'+s+'</li>'}).join("")+'</ol></div>';
+ h+='<div class="card warn"><h2>⛔ لا تفعل أبداً</h2><ul>'+d.donts.map(function(s){return'<li>'+s+'</li>'}).join("")+'</ul></div>';
+ h+='<div class="card"><h2>💬 اسأل المساعد</h2><div id="log"><div class="m b">اكتب سؤالك أو اختر من الأسئلة السريعة.</div></div><div id="chips"></div><div class="row" style="margin-top:8px"><input id="q" placeholder="اكتب سؤالك هنا…" style="margin:0"><button class="send" id="go">إرسال</button></div></div>';
+ h+='<div class="card"><h2>📨 لم تُحل المشكلة؟ أرسل بلاغاً</h2><textarea id="desc" rows="3" placeholder="صف المشكلة باختصار"></textarea>'+CONTACTS.map(function(c,i){return'<button class="send rep" data-i="'+i+'" style="width:100%;margin-bottom:8px">إرسال إلى '+c.n+' عبر واتساب</button>'}).join("")+'<small>سيصل البلاغ مع اسم الفرع والجهاز. أرفق صورة إن أمكن.</small></div>';
+ app.innerHTML=h;
+ var log=document.getElementById("log"),q=document.getElementById("q");
+ function add(t,c,il){var x=document.createElement("div");x.className="m "+c;x.textContent=t;if(il){var w=document.createElement("div");w.innerHTML=ILL[il];x.appendChild(w)}log.appendChild(x);log.scrollTop=log.scrollHeight}
+ function ask(t){t=t.trim();if(!t)return;add(t,"u");var n=norm(t),hit=null,best=0;
+  d.kb.forEach(function(e){var s=0;e.k.forEach(function(w){if(n.indexOf(norm(w))>-1)s+=w.length+(e.d?20:0)});if(s>best){best=s;hit=e}});
+  if(hit)add(hit.a,"b",hit.ill);else add("لم أفهم سؤالك بدقة. جرّب صياغة أخرى أو أرسل بلاغاً من الزر بالأسفل.","b");q.value=""}
+ d.chips.forEach(function(t){var b=document.createElement("button");b.className="chip";b.textContent=t;b.onclick=function(){ask(t)};document.getElementById("chips").appendChild(b)});
+ document.getElementById("go").onclick=function(){ask(q.value)};
+ q.addEventListener("keydown",function(e){if(e.key==="Enter")ask(q.value)});
+ Array.prototype.forEach.call(document.querySelectorAll(".rep"),function(b){b.onclick=function(){
+  var m="بلاغ عطل\nالفرع: "+BRANCH+"\nالجهاز: "+d.n+"\nالوصف: "+(document.getElementById("desc").value||"—");
+  location.href="https://wa.me/"+CONTACTS[b.getAttribute("data-i")].wa+"?text="+encodeURIComponent(m)}})}
+function route(){var h=location.hash.replace("#","");window.scrollTo(0,0);if(DEV[h])device(h);else home()}
+window.addEventListener("hashchange",route);route();
+</script>
+</body>
+</html>
